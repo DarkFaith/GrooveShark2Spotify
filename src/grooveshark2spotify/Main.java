@@ -29,15 +29,10 @@ public class Main
     static ArrayList<Playlist> playlistList = new ArrayList<>();
     static String spotifyURL = "https://api.spotify.com/v1/search";
     static ArrayList spotifyTrackList = new ArrayList();
-    /**
-     * @param args the command line arguments
-     */;
-    /**
-     * @param args the command line arguments
-     */
+
     public static void main(String[] args)
     {
-        File playlistDir = new File("Playlists");
+        File playlistDir = new File("GroovesharkPlaylists");
         File[] playlistDirList = playlistDir.listFiles();
         if (playlistDirList != null) {
             // Iterate over every playlist File
@@ -46,22 +41,29 @@ public class Main
                 {
                     Playlist pList = new Playlist(playlistFile.getName());
                     playlistList.add(pList);
+                    
                     BufferedReader br = new BufferedReader(new FileReader(playlistFile));
                     String line;
                     br.readLine(); // Gets rid of initial header line
+                    
+                    /* 
+                     * Iterate through each line (song) in the playlist text file,
+                     * gets spotify URL and save song in playlist
+                     */
                     while ((line = br.readLine()) != null) {
                         Song song = txtToSong(line);
                         System.out.println("Song: " + song.getSongName());
                         System.out.println("Artist: " + song.getArtistName());
                         System.out.println("Album: " + song.getAlbumName());
 
+                        //Sends a request with song info as query to Spotify API
                         String query = song.getSongName();
                         String result = requestTrackURL(URLEncoder.encode(query, "utf-8"));
                         
-                        if (result.isEmpty()) {
-                            
-                        }
-                        System.out.println(result);
+                        //Sends a request with song info as query to Spotify API
+                        System.out.println("Spotify track URL: " + result);
+                        
+                        // Set the spotify URL to the Song and add it to the playlist
                         song.setSpotifyURL(result);
                         pList.addSong(song);
                     }
@@ -79,11 +81,24 @@ public class Main
         saveToFile();
     }
     
+    /**
+     * Converts line of song in text form from Grooveshark playlist dump file
+     * 
+     * @param line line of song in text form
+     * @return Song object containing the song info (Song name, Artist name, Album name)
+     */
     public static Song txtToSong(String line) {
         String[] songSplit = line.split("\"");
         return (new Song(songSplit[1], songSplit[3], songSplit[5]));
     }
     
+    /**
+     * Sends a Spotify request with a query for a single track match
+     * 
+     * @param query query parameters in string form
+     * @see https://developer.spotify.com/web-api/search-item/ for query examples
+     * @return Spotify track URL
+     */
     public static String requestTrackURL(String query) {
         String result = "";
         try
@@ -121,17 +136,21 @@ public class Main
         return result;
     }
     
+    /**
+     * Save Spotify playlists in separate files (Additional file for songs that weren't found)
+     */
     public static void saveToFile() {
         for (Playlist pList : playlistList) {
             try
             {
-                BufferedWriter writer = new BufferedWriter(new FileWriter(pList.getName()));
-                BufferedWriter writerNotFound = new BufferedWriter(new FileWriter(pList.getName() + " (not found"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter("GroovesharkPlaylists/" + pList.getName()));
+                BufferedWriter writerNotFound = new BufferedWriter(new FileWriter("GroovesharkPlaylists/" + pList.getName().split(".txt")[0] + " (not found) .txt"));
                 for (Song song : pList.getSongList()) {
                     String spotifyUrl = song.getSpotifyURL();
                     if (!spotifyUrl.isEmpty()) {
                         writer.write(spotifyUrl + "\n");
                     } else {
+                        writerNotFound.write(song + "\n");
                     }
                 }
                 writer.close();
@@ -140,7 +159,5 @@ public class Main
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
-    }
-    
-    
+    } 
 }

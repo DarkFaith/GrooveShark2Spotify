@@ -66,6 +66,11 @@ public class Song
         }
     }
     
+    @Override
+    public String toString() {
+        return songName + " - " + artistName + " - " + albumName;
+    }
+    
     
     
     
