@@ -172,7 +172,7 @@ public class Main
             try
             {
                 BufferedWriter writer = new BufferedWriter(new FileWriter("SpotifyPlaylists/" + pList.getName()));
-                BufferedWriter writerNotFound = new BufferedWriter(new FileWriter("SpotifyPlaylists/" + pList.getName().split(".txt")[0] + " (not found) .txt"));
+                BufferedWriter writerNotFound = new BufferedWriter(new FileWriter("SpotifyPlaylists/" + pList.getName().split(".txt")[0] + " (not found).txt"));
                 for (Song song : pList.getSongList()) {
                     String spotifyUrl = song.getSpotifyURL();
                     if (!spotifyUrl.isEmpty()) {
