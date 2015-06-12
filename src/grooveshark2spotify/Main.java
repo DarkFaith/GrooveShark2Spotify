@@ -60,8 +60,10 @@ public class Main
                             System.out.println("Album: " + song.getAlbumName());
 
                             //Sends a request with song info as query to Spotify API
-                            String query = "\"" + song.getSongName() + "\"";
-                            String result = requestTrackURL(URLEncoder.encode(query, "utf-8"));
+                            String artistQuery = URLEncoder.encode("artist:" +  "\"" + song.getArtistName() + "\"", "utf-8");
+                            String songQuery = URLEncoder.encode("track:" + "\"" + song.getSongName() + "\"", "utf-8");
+                            
+                            String result = requestTrackURL(artistQuery + "%20" + songQuery + "&type=track");
 
                             //Sends a request with song info as query to Spotify API
                             System.out.println("Spotify track URL: " + result);
@@ -111,7 +113,7 @@ public class Main
         String result = "";
         try
         {
-            URL url = new URL(spotifyURL + "?q=" + query + "&type=track&limit=1");
+            URL url = new URL(spotifyURL + "?q=" + query + "&limit=1");
             System.out.println(url);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
@@ -176,10 +178,11 @@ public class Main
                     if (!spotifyUrl.isEmpty()) {
                         writer.write(spotifyUrl + "\n");
                     } else {
-                        writerNotFound.write(song + "\n");
+                        writerNotFound.write(song.toString() + "\n");
                     }
                 }
                 writer.close();
+                writerNotFound.close();
             } catch (IOException ex)
             {
                 Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
