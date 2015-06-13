@@ -31,9 +31,12 @@ public class Main
     static ArrayList<Playlist> playlistList = new ArrayList<>();
     static String spotifyURL = "https://api.spotify.com/v1/search";
     static ArrayList spotifyTrackList = new ArrayList();
-
+    static File groovesharkDir = new File("GroovesharkPlaylists");
     public static void main(String[] args)
     {
+        if (!groovesharkDir.exists()) {
+            groovesharkDir.mkdir();
+        }
         File playlistDir = new File("GroovesharkPlaylists");
         File[] playlistDirList = playlistDir.listFiles();
         if (playlistDirList != null) {
@@ -171,6 +174,10 @@ public class Main
         for (Playlist pList : playlistList) {
             try
             {
+                File spotifyDir = new File("SpotifyPlaylists");
+                if (!spotifyDir.exists()) {
+                    spotifyDir.mkdir();
+                }
                 BufferedWriter writer = new BufferedWriter(new FileWriter("SpotifyPlaylists/" + pList.getName()));
                 BufferedWriter writerNotFound = new BufferedWriter(new FileWriter("SpotifyPlaylists/" + pList.getName().split(".txt")[0] + " (not found).txt"));
                 for (Song song : pList.getSongList()) {
