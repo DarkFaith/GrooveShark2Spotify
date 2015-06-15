@@ -1,7 +1,8 @@
 # GrooveShark2Spotify
 
-1. Get your grooveshark playlist files from: http://googleglass.my/groovebackup/
-
+1. Get your grooveshark playlist files from: http://googleglass.my/groovebackup/ (This only works if you've done it at least once since it no longer works, it will be cached if you've done it before)
+    - If this doesn't work, go on a computer where you didn't clear local browser data since grooveshark went down and follow the instructions here: http://www.dailydot.com/technology/how-to-save-grooveshark-playlists/
+    - 
 2. Save all files to the GroovesharkPlaylists folder
 
 3. Run Grooveshark2Spotify.jar (Requires Java 1.7)
